@@ -10,6 +10,7 @@
             --silver: #c0c0c0;
             --silver-chalice: #b2b2b2;
             --tundora: #4c4c4c;
+            --dove: #666666;
             --portage: #8dade5;
             --cornflower-blue: #4285F4;
             --royal-blue: #427fed;
@@ -45,43 +46,6 @@
         a:hover{
             color: var(--portage);
         }
-        button.submit{
-            background-color: var(--cornflower-blue);
-            border: 0.1em solid var(--sea-depth);
-            border-radius: 0.2em;
-            color: white;
-            cursor: pointer;
-            font-size: 1.2em;
-            height: 2.4em;
-            padding: 0 1.5em 0 1.5em;
-        }
-        button.submit:hover{
-            background-color: var(--sea-depth);
-        }
-
-        /*white-minus = background-position: 14px 0;*/
-        /*white-plus = background-position: 28px 0;*/
-        /*black-minus = background-position: 42px 0;*/
-        /*black-plus = background-position: 56px 0;*/
-
-        /*close-x = background-position: 70px 0;*/
-        /*document = background-position: 84px 0;*/
-        /*red-folder = background-position: 98px 0;*/
-        /*blue-folder = background-position: 112px 0;*/
-
-        .x-close {
-            -webkit-mask-image: url("./icon-sprite.png");
-            -webkit-mask-position: 70px 0;
-            background-color: var(--silver-chalice);
-            height: 14px;
-            width: 14px;
-            cursor: pointer;
-        }
-
-        .x-close:hover {
-            background-color: var(--tundora);
-        }
-
         #main {
             top: 0;
             right: 0;
@@ -124,12 +88,30 @@
 
         #modalBody {
             box-shadow: inset 0 0.4em 0.4em -0.4em var(--mercury);
-            height: 50em;
+            height: 48em;
+            padding-top: 1em;
+            padding-bottom: 1em;
+            overflow: scroll;
         }
 
         #footer {
             border-top: 0.1em solid var(--mercury);
             height: 5em;
+        }
+        /*CLASS*/
+        .mask-buttonable{
+            height: 14px;
+            width: 14px;
+            cursor: pointer;
+            background-color: var(--silver-chalice);
+        }
+        .mask-buttonable:hover{
+            background-color: var(--tundora);
+        }
+        .buttonable{
+            height: 14px;
+            width: 14px;
+            cursor: pointer;
         }
         .flex-align {
             display: flex;
@@ -137,12 +119,60 @@
             align-items: center;
             justify-content: space-between;
         }
+        .folder-row {
+            height: 3em;
+            display: flex;
+            flex: 1;
+            padding-left: 1.5em;
+            align-items: center;
+        }
+        .folder-icon {
+            background-image:url("./icon-sprite.png");
+            background-position: 112px 0px;
+            margin-left: 0.5em;
+        }
+        .folder-expanded {
+            -webkit-mask-image: url("./icon-sprite.png");
+            -webkit-mask-position: 42px 0;
+        }
+        .folder-contracted {
+            -webkit-mask-image: url("./icon-sprite.png");
+            -webkit-mask-position: 56px 0;
+        }
+        .folder-label {
+            padding-left: 1em;
+            color: var(--dove);
+        }
         .section {
             padding-left: 1.5em;
             padding-right: 1.5em;
         }
-        .folder-row {
-            height: 5em;
+        .submit{
+            background-color: var(--cornflower-blue);
+            border: 0.1em solid var(--sea-depth);
+            border-radius: 0.2em;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2em;
+            height: 2.4em;
+            padding: 0 1.5em 0 1.5em;
+        }
+        .submit:hover{
+            background-color: var(--sea-depth);
+        }
+        /*white-minus = background-position: 14px 0;*/
+        /*white-plus = background-position: 28px 0;*/
+        /*black-minus = background-position: 42px 0;*/
+        /*black-plus = background-position: 56px 0;*/
+
+        /*close-x = background-position: 70px 0;*/
+        /*document = background-position: 84px 0;*/
+        /*red-folder = background-position: 98px 0;*/
+        /*blue-folder = background-position: 112px 0;*/
+        .x-close {
+            -webkit-mask-image: url("./icon-sprite.png");
+            -webkit-mask-position: 70px 0;
+            background-color: var(--silver-chalice);
         }
     </style>
     <meta charset="utf-8">
@@ -167,13 +197,23 @@
         <div id="modal">
             <div id="title" class="flex-align section">
                 <h1>Title</h1>
-                <span class="x-close"></span>
+                <span class="x-close mask-buttonable"></span>
             </div>
             <div id="label" class="flex-align section">
                 <h3>Label</h3>
             </div>
             <div id="modalBody">
-                
+                <div class="folder-row" id="1">
+                    <button class="folder-contracted mask-buttonable"></button>
+                    <div class="folder-icon buttonable"></div>
+                    <h3 class="folder-label">Folder One</h3>
+                </div>
+
+                <div class="folder-row" id="2">
+                    <button class="folder-expanded mask-buttonable"></button>
+                    <div class="folder-icon buttonable"></div>
+                    <h3 class="folder-label">Folder Two</h3>
+                </div>
             </div>
             <div id="footer" class="flex-align section">
                 <a>Link</a>
