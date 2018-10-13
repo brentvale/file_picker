@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      .folder-row {
+        height: 50px;
+        width: '100%';
+      }
+    </style>
+    <meta charset="utf-8">
+    <title>DOM Tree as a File System</title>
+  </head>
+  <body>
+    <h1>An Example Site</h1>
+    <h3>To Demonstrate what some nested nodes might look like</h3>
+    <ul>
+      <li>One</li>
+      <li>Two</li>
+      <li>Three</li>
+    </ul>
+    <p>
+      Some Text
+      <!-- A Comment -->
+      More Text
+    </p>
+    
+    <div id='main'></div>
+    
+    
+    <script>
+      const data = [
+        {
+          id: 1,
+          displayText: 'body',
+          type: 'element',
+          alwaysVisible: true,
+          visible: true,
+          children: [
+            {
+              id: 2,
+              displayText: 'h1',
+              type: 'element',
+              visible: false,
+              children: [
+                {
+                  id: 3,
+                  type: 'text',
+                  visible: false,
+                  displayText: 'An Example Site',
+                }
+              ]
+            },
+            {
+              id: 4,
+              displayText: 'h3',
+              type: 'element',
+              visible: false,
+              children: [
+                {
+                  id: 5,
+                  type: 'text',
+                  visible: false,
+                  displayText: 'To Demonstrate what some nested nodes might look like',
+                }
+              ]
+            },
+            {
+              id: 6,
+              displayText: 'ul',
+              type: 'element',
+              visible: false,
+              children: [
+                {
+                  id: 7,
+                  displayText: 'li',
+                  type: 'element',
+                  visible: false,
+                  children: [
+                    {
+                      id: 8,
+                      type: 'text',
+                      displayText: 'One',
+                      visible: false,
+                    }
+                  ]
+                },
+                {
+                  id: 9,
+                  displayText: 'li',
+                  type: 'element',
+                  visible: false,
+                  children: [
+                    {
+                      id: 10,
+                      type: 'text',
+                      displayText: 'Two',
+                      visible: false,
+                    }
+                  ]
+                },
+                {
+                  id: 11,
+                  displayText: 'li',
+                  type: 'element',
+                  visible: false,
+                  children: [
+                    {
+                      id: 12,
+                      type: 'text',
+                      displayText: 'Three',
+                      visible: false,
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 13,
+              displayText: 'p',
+              type: 'element',
+              visible: false,
+              children: [
+                {
+                  id: 14,
+                  type: 'text',
+                  displayText: 'Some Text',
+                  visible: false,
+                },
+                // {
+//                   id: 15,
+//                   type: 'comment',
+//                 },
+                {
+                  id: 15,
+                  type: 'text',
+                  displayText: 'More Text',
+                  visible: false,
+                }
+              ]
+            },
+          ]
+        }
+      ];
+      
+      function render(data){
+        let target = data[0];
+        let div = document.createElement("DIV");
+        let title = document.createTextNode(target.displayText);
+        div.appendChild(title);
+        div.className = 'folder-row';
+        div.setAttribute('data-id', target.id);
+        
+        document.getElementById('main')
+              .appendChild(div);
+      }
+      
+      document.addEventListener("DOMContentLoaded", function(event) { 
+        render(data);
+      });
+      
+      document.addEventListener('click', function (event) {
+      	var clickedElem = event.target;
+        alert(clickedElem.getAttribute('data-id'));
+      }, false);
+    
+      
+    </script>
+  </body>
+</html>
