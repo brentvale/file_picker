@@ -1,32 +1,188 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <style>
-      .folder-row {
-        height: 50px;
-        width: '100%';
-      }
+        :root {
+            --concrete: #f2f2f2;
+            --wild-sand: #f5f5f5;
+            --mercury: #e2e2e2;
+            --alto: #dcdcdc;
+            --silver: #c0c0c0;
+            --silver-chalice: #b2b2b2;
+            --tundora: #4c4c4c;
+            --portage: #8dade5;
+            --cornflower-blue: #4285F4;
+            --royal-blue: #427fed;
+            --sea-depth: #3c78dc;
+        }
+        html {
+            font-size: 16px;
+        }
+        body {
+            font-size: 62.5%;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 100;
+        }
+        h1 {
+            font-size: 1.3em;
+            font-weight: 100;
+            margin: 0;
+            display: inline-block;
+            color: var(--tundora);
+        }
+        h3 {
+            font-size: 1.2em;
+            font-weight: 100;
+            margin: 0;
+            display: inline-block;
+            color: var(--silver-chalice);
+        }
+        a{
+            font-size: 1.2em;
+            color: var(--royal-blue);
+            cursor: pointer;
+        }
+        a:hover{
+            color: var(--portage);
+        }
+        button.submit{
+            background-color: var(--cornflower-blue);
+            border: 0.1em solid var(--sea-depth);
+            border-radius: 0.2em;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2em;
+            height: 2.4em;
+            padding: 0 1.5em 0 1.5em;
+        }
+        button.submit:hover{
+            background-color: var(--sea-depth);
+        }
+
+        /*white-minus = background-position: 14px 0;*/
+        /*white-plus = background-position: 28px 0;*/
+        /*black-minus = background-position: 42px 0;*/
+        /*black-plus = background-position: 56px 0;*/
+
+        /*close-x = background-position: 70px 0;*/
+        /*document = background-position: 84px 0;*/
+        /*red-folder = background-position: 98px 0;*/
+        /*blue-folder = background-position: 112px 0;*/
+
+        .x-close {
+            -webkit-mask-image: url("./icon-sprite.png");
+            -webkit-mask-position: 70px 0;
+            background-color: var(--silver-chalice);
+            height: 14px;
+            width: 14px;
+            cursor: pointer;
+        }
+
+        .x-close:hover {
+            background-color: var(--tundora);
+        }
+
+        #main {
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            min-height: 80em;
+            min-width: 40em;
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--concrete);
+            position: absolute;
+            z-index: 1;
+        }
+
+        #modal {
+            height: 64em;
+            width: 32em;
+            background-color: white;
+            border-radius: 0.4em;
+            border: 1px solid var(--alto);
+            box-shadow: 0 2em 7em -1em rgba(145,145,145,1);
+            overflow: hidden;
+            font-size: 1em;
+        }
+
+        #title {
+            background-color: var(--wild-sand);
+            border-bottom: 1px solid var(--mercury);
+            height: 5em;
+        }
+
+        #label {
+            border-bottom: 1px solid var(--mercury);
+            height: 4em;
+        }
+
+        #modalBody {
+            box-shadow: inset 0 0.4em 0.4em -0.4em var(--mercury);
+            height: 50em;
+        }
+
+        #footer {
+            border-top: 0.1em solid var(--mercury);
+            height: 5em;
+        }
+        .flex-align {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section {
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+        }
+        .folder-row {
+            height: 5em;
+        }
     </style>
     <meta charset="utf-8">
     <title>DOM Tree as a File System</title>
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body>
     <h1>An Example Site</h1>
     <h3>To Demonstrate what some nested nodes might look like</h3>
     <ul>
-      <li>One</li>
-      <li>Two</li>
-      <li>Three</li>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
     </ul>
     <p>
-      Some Text
-      <!-- A Comment -->
-      More Text
+        Some Text
+        <!-- A Comment -->
+        More Text
     </p>
-    
-    <div id='main'></div>
-    
-    
+
+    <div id="main">
+        <div id="modal">
+            <div id="title" class="flex-align section">
+                <h1>Title</h1>
+                <span class="x-close"></span>
+            </div>
+            <div id="label" class="flex-align section">
+                <h3>Label</h3>
+            </div>
+            <div id="modalBody">
+                
+            </div>
+            <div id="footer" class="flex-align section">
+                <a>Link</a>
+                <button class="submit">Done</button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
       const data = [
         {
@@ -127,9 +283,9 @@
                   visible: false,
                 },
                 // {
-//                   id: 15,
-//                   type: 'comment',
-//                 },
+    //                   id: 15,
+    //                   type: 'comment',
+    //                 },
                 {
                   id: 15,
                   type: 'text',
@@ -141,29 +297,28 @@
           ]
         }
       ];
-      
-      function render(data){
+
+      function render(data) {
         let target = data[0];
         let div = document.createElement("DIV");
         let title = document.createTextNode(target.displayText);
         div.appendChild(title);
         div.className = 'folder-row';
         div.setAttribute('data-id', target.id);
-        
+
         document.getElementById('main')
-              .appendChild(div);
+          .appendChild(div);
       }
-      
-      document.addEventListener("DOMContentLoaded", function(event) { 
-        render(data);
-      });
-      
-      document.addEventListener('click', function (event) {
-      	var clickedElem = event.target;
-        alert(clickedElem.getAttribute('data-id'));
-      }, false);
-    
-      
+
+      //      document.addEventListener("DOMContentLoaded", function(event) {
+      //        render(data);
+      //      });
+
+      //      document.addEventListener('click', function (event) {
+      //      	var clickedElem = event.target;
+      //        alert(clickedElem.getAttribute('data-id'));
+      //      }, false);
+
     </script>
-  </body>
+</body>
 </html>
