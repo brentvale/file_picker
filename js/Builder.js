@@ -53,10 +53,12 @@ Builder.prototype = {
     var div = this.document.createElement("DIV");
     switch(boxType){
       case "fixed":
-        div.className = 'boxed';
+        break;
+      case "fixedMargin":
+        div.setAttribute("style", "margin-left: 6px");
         break;
       case "overflow":
-        div.className = 'boxed-overflow';
+        div.setAttribute("style", "overflow:hidden");
         break;
     }
     return div;
@@ -123,7 +125,7 @@ Builder.prototype = {
       div.appendChild(buttonDivContainer);
     }
 
-    var iconDivContainer = this.createInnerContainer('fixed');
+    var iconDivContainer = this.createInnerContainer('fixedMargin');
     var iconDiv = this.createIconDiv(data);
 
     iconDivContainer.appendChild(iconDiv);
