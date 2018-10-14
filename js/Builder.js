@@ -14,16 +14,24 @@ Builder.prototype = {
     var that = this;
     this.document.addEventListener('click', function (event) {
       var targetId = event.target.getAttribute('data-id');
-      var className = event.target.className;
 
       if(targetId){
+        //user clicks directly on the +/- button
         that.store.toggleExpandOrContract(targetId, that.render.bind(that));
-      }
-      if(className.match(/row/g)){
+      } else {
+        //search for nearest parent with 'row' class
+        var node = event.target;
+        var className = node.className;
 
-        var targetRowId = event.target.getAttribute('row-id');
-        console.log("MATCHES", targetRowId, className)
-        that.store.toggleSelectedRow(targetRowId, that.render.bind(that));
+        while(!className.match(/row/g) && node.parentNode){
+          node = node.parentNode;
+          className = node.className;
+        }
+
+        if(className.match(/row/g)){
+          var targetRowId = node.getAttribute('row-id');
+          that.store.toggleSelectedRow(targetRowId, that.render.bind(that));
+        }
       }
     }, false);
     this.render();
