@@ -1,3 +1,7 @@
+'use strict'
+
+var INDENT_PER_LEVEL = 15;
+
 function Builder(params){
   this.document = params.document;
   this.store = new DataStore();
@@ -9,7 +13,7 @@ Builder.prototype = {
     this.document.addEventListener('click', function (event) {
       var targetId = event.target.getAttribute('data-id');
       if(targetId){
-        that.store.updateTree(targetId);
+        that.store.toggleExpandOrContract(targetId, that.render.bind(that));
       }
     }, false);
     this.render();
@@ -19,7 +23,12 @@ Builder.prototype = {
     div.className = "folder-row";
 
     var button = this.document.createElement("BUTTON");
-    button.className = "folder-contracted mask-buttonable";
+
+    if(data.showChildren){
+      button.className = "folder-expanded mask-buttonable";
+    } else {
+      button.className = "folder-contracted mask-buttonable";
+    }
     button.setAttribute('data-id', data.id);
     div.appendChild(button);
 
@@ -35,14 +44,46 @@ Builder.prototype = {
 
     return div;
   },
+  prepareRenderableElements: function(){
 
-  render: function(data) {
-    var modalBody = this.document.getElementById('modalBody');
+    var docFrag = this.document.createDocumentFragment();
+    var divsToAppend = [];
+    this.store.data.forEach(function(el){
+      divsToAppend.push(el);
+    });
 
-    var target = this.store.data[0];
-    var div = this.createFolderRow(target);
+    while(divsToAppend.length){
+      var node = divsToAppend.shift();
+      var div = null;
 
-    modalBody.append(div);
+      switch(node.type){
+        case "element":
+          div = this.createFolderRow(node);
+      }
 
+      if(div){
+        docFrag.appendChild(div);
+      }
+
+      if(node.showChildren && node.children && node.children.length){
+        node.children.forEach(function(el){
+          divsToAppend.push(el);
+        });
+      }
+    }
+
+    return docFrag;
+  },
+  removeChildren: function(targetId){
+    var node = this.document.getElementById(targetId);
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  },
+  render: function() {
+    this.removeChildren('modalBody');
+    var docFrag = this.prepareRenderableElements();
+
+    modalBody.appendChild(docFrag);
   }
 };
