@@ -3,6 +3,9 @@
 var INDENT_PER_LEVEL = 25;
 var INITIAL_PADDING_LEFT = 15;
 var TEXT_EXTRA_PADDING = 15;
+var MODAL_WIDTH = 320;
+var IMAGE_INDENT = 58; // 14 + 14 + 15 + 15 (image widths + gaps)
+var TEXT_INDENT = 29; // 14 + 15 (image width + single gap)
 
 function Builder(params){
   this.document = params.document;
@@ -21,14 +24,16 @@ Builder.prototype = {
       } else {
         //search for nearest parent with 'row' class
         var node = event.target;
-        var className = node.className;
+        var className = node.className || "none";
 
         while(!className.match(/row/g) && node.parentNode){
           node = node.parentNode;
-          className = node.className;
+          if(node.className){
+            className = node.className;
+          }
         }
 
-        if(className.match(/row/g)){
+        if(className && className.match(/row/g)){
           var targetRowId = node.getAttribute('row-id');
           that.store.toggleSelectedRow(targetRowId, that.render.bind(that));
         }
@@ -37,10 +42,10 @@ Builder.prototype = {
     this.render();
   },
   createFolderRow: function(data) {
+    var fullIndent = data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT;
     var div = this.document.createElement("DIV");
     div.className = data.selected ? "row selected" : "row";
-    var paddingStyle = "padding-left:" +
-      (data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT) + "px";
+    var paddingStyle = "padding-left:" + fullIndent + "px";
     div.setAttribute("style", paddingStyle);
     div.setAttribute('row-id', data.id);
 
@@ -60,6 +65,7 @@ Builder.prototype = {
 
     var title = this.document.createElement("H3");
     title.className = "content-label";
+    title.setAttribute("style", "max-width:" + (MODAL_WIDTH - (fullIndent + IMAGE_INDENT)) + "px");
     var titleText = this.document.createTextNode(data.displayText);
     title.appendChild(titleText);
     div.appendChild(title);
@@ -67,10 +73,10 @@ Builder.prototype = {
     return div;
   },
   createTextRow: function(data){
+    var fullIndent = data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT + TEXT_EXTRA_PADDING;
     var div = this.document.createElement("DIV");
     div.className = data.selected ? "row selected" : "row";
-    var paddingStyle = "padding-left:" +
-      (data.level * INDENT_PER_LEVEL + TEXT_EXTRA_PADDING + INITIAL_PADDING_LEFT) + "px";
+    var paddingStyle = "padding-left:" + fullIndent + "px";
     div.setAttribute("style", paddingStyle);
     div.setAttribute('row-id', data.id);
 
@@ -79,7 +85,8 @@ Builder.prototype = {
     div.appendChild(innerDiv);
 
     var title = this.document.createElement("H3");
-    title.className = "content-label";
+    title.className = "content-label-document";
+    title.setAttribute("style", "max-width:" + (MODAL_WIDTH - (fullIndent + TEXT_INDENT)) + "px");
     var titleText = this.document.createTextNode(data.displayText);
     title.appendChild(titleText);
     div.appendChild(title);

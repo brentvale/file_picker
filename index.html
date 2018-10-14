@@ -26,17 +26,18 @@
         }
         h1 {
             font-size: 1.3em;
-            font-weight: 100;
-            margin: 0;
-            display: inline-block;
             color: var(--tundora);
         }
         h3 {
             font-size: 1.2em;
+            color: var(--silver-chalice);
+        }
+        h1, h3{
             font-weight: 100;
             margin: 0;
-            display: inline-block;
-            color: var(--silver-chalice);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
         a{
             font-size: 1.2em;
@@ -118,18 +119,28 @@
             height: 14px;
             width: 14px;
         }
-        .flex-align {
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: space-between;
+        .content-label {
+            margin-left: 1em;
+            max-width: 100%;
+            color: inherit;
+        }
+        .content-label-document {
+            margin-left: 0.8em;
+            max-width: 100%;
+            color: inherit;
         }
         .document-icon {
             height: 14px;
             width: 14px;
             background-image:url("./icon-sprite.png");
             background-position: 84px 0px;
-            margin-left: 0.5em;
+            margin-left: 0.8em;
+        }
+        .flex-align {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
         }
         .folder-icon {
             background-image:url("./icon-sprite.png");
@@ -144,22 +155,17 @@
             -webkit-mask-image: url("./icon-sprite.png");
             -webkit-mask-position: 56px 0;
         }
-        .selected > .folder-contracted {
-
-        }
-        .content-label {
-            padding-left: 1em;
-            color: var(--dove) inherit;
-        }
         .row {
             height: 3em;
             display: flex;
             flex: 1;
             padding-left: 1.5em;
+            padding-right: 1.5em;
             align-items: center;
             cursor: grab;
+            color: var(--dove);
         }
-        .selected{
+        .row.selected{
             background-color: var(--cornflower-blue);
             color: white;
         }

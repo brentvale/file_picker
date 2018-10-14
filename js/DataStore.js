@@ -26,12 +26,12 @@ DataStore.prototype = {
     if(obj instanceof Array){
       for(var i = 0; i < obj.length; i ++){
         if(obj[i].id == id){
-          obj[i].selected = true;
+          obj[i].selected = !obj[i].selected;
         }
         if(obj[i].selected && obj[i].id != id){
           obj[i].selected = false;
         }
-        if(obj[i].showChildren && obj[i].children && obj[i].children.length){
+        if(obj[i].children && obj[i].children.length){
           this.findAndUpdateSelectedRow(obj[i].children, id);
         }
       }
@@ -58,7 +58,7 @@ const data = [
     children: [
       {
         id: 2,
-        displayText: 'h1',
+        displayText: 'h1 and then some other stuff and more that goes here.',
         type: 'element',
         showChildren: false,
         selected: false,
