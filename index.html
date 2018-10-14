@@ -15,6 +15,7 @@
             --cornflower-blue: #4285F4;
             --royal-blue: #427fed;
             --sea-depth: #3c78dc;
+            --carnation: #f76659;
         }
         html {
             font-size: 16px;
@@ -109,10 +110,10 @@
         .mask-buttonable:hover{
             background-color: var(--tundora);
         }
-        .selected .mask-buttonable {
+        .selected .mask-buttonable, .private-selected .mask-buttonable {
             background-color: white;
         }
-        .selected .mask-buttonable:hover {
+        .selected .mask-buttonable:hover,.private-selected .mask-buttonable:hover {
             background-color: var(--mercury);
         }
         .buttonable{
@@ -145,6 +146,10 @@
             background-image:url("./icon-sprite.png");
             background-position: 112px 0px;
         }
+        .private-folder-icon {
+            background-image:url("./icon-sprite.png");
+            background-position: 98px 0px;
+        }
         .folder-expanded {
             -webkit-mask-image: url("./icon-sprite.png");
             -webkit-mask-position: 42px 0;
@@ -165,6 +170,10 @@
         }
         .row.selected{
             background-color: var(--cornflower-blue);
+            color: white;
+        }
+        .row.private-selected{
+            background-color: var(--carnation);
             color: white;
         }
         .section {

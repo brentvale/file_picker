@@ -19,6 +19,7 @@ Builder.prototype = {
         //user clicks directly on the +/- button
         that.store.toggleExpandOrContract(targetId, that.render.bind(that));
       } else {
+        //user clicked elsewhere and row should be highlighted blue
         //search for nearest parent with 'row' class
         var node = event.target;
         var className = node.className || "none";
@@ -56,9 +57,22 @@ Builder.prototype = {
     button.setAttribute('data-id', data.id);
     return button;
   },
+  selectedClassName: function(data){
+    if(data.selected){
+      if(data.category === "head"){
+        return "row private-selected";
+      } else if(data.category === "body"){
+        return "row selected";
+      }
+    } else {
+      return "row";
+    }
+  },
   createDivContainer: function(data, indent){
     var div = this.document.createElement("DIV");
-    div.className = data.selected ? "row selected" : "row";
+
+    div.className = this.selectedClassName(data);
+
     var paddingStyle = "padding-left:" + indent + "px";
     div.setAttribute("style", paddingStyle);
     div.setAttribute('row-id', data.id);
@@ -125,7 +139,12 @@ Builder.prototype = {
       case "text":
         return 'document-icon';
       case "element":
-        return 'folder-icon buttonable';
+        if(data.category === 'body'){
+          return 'folder-icon buttonable';
+        } else if(data.category === 'head') {
+          return 'private-folder-icon buttonable';
+        }
+
     }
   },
   prepareRenderableElements: function(){
@@ -166,6 +185,7 @@ Builder.prototype = {
   },
   render: function() {
     this.removeChildren('modalBody');
+
     var docFrag = this.prepareRenderableElements();
 
     modalBody.appendChild(docFrag);
