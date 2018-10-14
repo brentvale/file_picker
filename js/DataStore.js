@@ -160,6 +160,107 @@ const data = [
         level: 1,
         children: [
           {
+            id: 16,
+            displayText: 'span',
+            type: 'element',
+            showChildren: false,
+            selected: false,
+            level: 2,
+            children: [
+              {
+                id: 17,
+                displayText: 'span',
+                type: 'element',
+                showChildren: false,
+                selected: false,
+                level: 3,
+                children: [
+                  {
+                    id: 18,
+                    displayText: 'span',
+                    type: 'element',
+                    showChildren: false,
+                    selected: false,
+                    level: 4,
+                    children: [
+                      {
+                        id: 19,
+                        displayText: 'span',
+                        type: 'element',
+                        showChildren: false,
+                        selected: false,
+                        level: 5,
+                        children: [
+                          {
+                            id: 20,
+                            type: 'text',
+                            displayText: 'Some Text: short',
+                            level: 6,
+                            selected: false,
+                          },
+                          {
+                            id: 21,
+                            type: 'text',
+                            displayText: 'Some Text that could be short or long',
+                            level: 6,
+                            selected: false,
+                          },
+                          {
+                            id: 22,
+                            displayText: 'span',
+                            type: 'element',
+                            showChildren: false,
+                            selected: false,
+                            level: 6,
+                            children: [
+                              {
+                                id: 23,
+                                displayText: 'span',
+                                type: 'element',
+                                showChildren: false,
+                                selected: false,
+                                level: 7,
+                                children: [
+                                  {
+                                    id: 24,
+                                    displayText: 'span',
+                                    type: 'element',
+                                    showChildren: false,
+                                    selected: false,
+                                    level: 8,
+                                    children: [
+                                      {
+                                        id: 25,
+                                        displayText: 'span',
+                                        type: 'element',
+                                        showChildren: false,
+                                        selected: false,
+                                        level: 9,
+                                        children: [
+                                          {
+                                            id: 26,
+                                            type: 'text',
+                                            displayText: 'Some Text that could be short or long',
+                                            level: 10,
+                                            selected: false,
+                                          },
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             id: 14,
             type: 'text',
             displayText: 'Some Text',

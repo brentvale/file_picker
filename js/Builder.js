@@ -3,9 +3,6 @@
 var INDENT_PER_LEVEL = 25;
 var INITIAL_PADDING_LEFT = 15;
 var TEXT_EXTRA_PADDING = 15;
-var MODAL_WIDTH = 320;
-var IMAGE_INDENT = 58; // 14 + 14 + 15 + 15 (image widths + gaps)
-var TEXT_INDENT = 29; // 14 + 15 (image width + single gap)
 
 function Builder(params){
   this.document = params.document;
@@ -41,6 +38,24 @@ Builder.prototype = {
     }, false);
     this.render();
   },
+  calculateIndent: function(data){
+    switch(data.type){
+      case "text":
+        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT + TEXT_EXTRA_PADDING;
+      case "element":
+        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT;
+    }
+  },
+  createButton: function(data){
+    var button = this.document.createElement("BUTTON");
+    if(data.showChildren){
+      button.className = "folder-expanded mask-buttonable";
+    } else {
+      button.className = "folder-contracted mask-buttonable";
+    }
+    button.setAttribute('data-id', data.id);
+    return button;
+  },
   createDivContainer: function(data, indent){
     var div = this.document.createElement("DIV");
     div.className = data.selected ? "row selected" : "row";
@@ -48,6 +63,12 @@ Builder.prototype = {
     div.setAttribute("style", paddingStyle);
     div.setAttribute('row-id', data.id);
     return div;
+  },
+  createIconDiv: function(data){
+    var iconClass = this.iconClass(data);
+    var innerDiv = this.document.createElement("DIV");
+    innerDiv.className = iconClass;
+    return innerDiv;
   },
   createInnerContainer: function(boxType){
     var div = this.document.createElement("DIV");
@@ -62,55 +83,6 @@ Builder.prototype = {
         break;
     }
     return div;
-  },
-  createButton: function(data){
-    var button = this.document.createElement("BUTTON");
-    if(data.showChildren){
-      button.className = "folder-expanded mask-buttonable";
-    } else {
-      button.className = "folder-contracted mask-buttonable";
-    }
-    button.setAttribute('data-id', data.id);
-    return button;
-  },
-  createIconDiv: function(data){
-    var iconClass = this.iconClass(data);
-    var innerDiv = this.document.createElement("DIV");
-    innerDiv.className = iconClass;
-    return innerDiv;
-  },
-  createTitle: function(data){
-    var titleClass = this.titleClass(data);
-    var title = this.document.createElement("H3");
-    title.className = titleClass;
-
-    var titleText = this.document.createTextNode(data.displayText);
-    title.appendChild(titleText);
-    return title;
-  },
-  calculateIndent: function(data){
-    switch(data.type){
-      case "text":
-        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT + TEXT_EXTRA_PADDING;
-      case "element":
-        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT;
-    }
-  },
-  iconClass: function(data){
-    switch(data.type){
-      case "text":
-        return 'document-icon';
-      case "element":
-        return 'folder-icon buttonable';
-    }
-  },
-  titleClass: function(data){
-    switch(data.type){
-      case "text":
-        return 'content-label-document';
-      case "element":
-        return 'content-label';
-    }
   },
   createRow: function(data){
     var fullIndent = this.calculateIndent(data);
@@ -139,6 +111,23 @@ Builder.prototype = {
 
     return div;
   },
+  createTitle: function(data){
+    var titleClass = this.titleClass(data);
+    var title = this.document.createElement("H3");
+    title.className = titleClass;
+
+    var titleText = this.document.createTextNode(data.displayText);
+    title.appendChild(titleText);
+    return title;
+  },
+  iconClass: function(data){
+    switch(data.type){
+      case "text":
+        return 'document-icon';
+      case "element":
+        return 'folder-icon buttonable';
+    }
+  },
   prepareRenderableElements: function(){
     var docFrag = this.document.createDocumentFragment();
     var divsToAppend = [];
@@ -160,6 +149,14 @@ Builder.prototype = {
     }
 
     return docFrag;
+  },
+  titleClass: function(data){
+    switch(data.type){
+      case "text":
+        return 'content-label-document';
+      case "element":
+        return 'content-label';
+    }
   },
   removeChildren: function(targetId){
     var node = this.document.getElementById(targetId);
