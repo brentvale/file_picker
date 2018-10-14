@@ -41,60 +41,103 @@ Builder.prototype = {
     }, false);
     this.render();
   },
-  createFolderRow: function(data) {
-    var fullIndent = data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT;
+  createDivContainer: function(data, indent){
     var div = this.document.createElement("DIV");
     div.className = data.selected ? "row selected" : "row";
-    var paddingStyle = "padding-left:" + fullIndent + "px";
+    var paddingStyle = "padding-left:" + indent + "px";
     div.setAttribute("style", paddingStyle);
     div.setAttribute('row-id', data.id);
-
+    return div;
+  },
+  createInnerContainer: function(boxType){
+    var div = this.document.createElement("DIV");
+    switch(boxType){
+      case "fixed":
+        div.className = 'boxed';
+        break;
+      case "overflow":
+        div.className = 'boxed-overflow';
+        break;
+    }
+    return div;
+  },
+  createButton: function(data){
     var button = this.document.createElement("BUTTON");
-
     if(data.showChildren){
       button.className = "folder-expanded mask-buttonable";
     } else {
       button.className = "folder-contracted mask-buttonable";
     }
     button.setAttribute('data-id', data.id);
-    div.appendChild(button);
-
-    var innerDiv = this.document.createElement("DIV");
-    innerDiv.className = "folder-icon buttonable";
-    div.appendChild(innerDiv);
-
-    var title = this.document.createElement("H3");
-    title.className = "content-label";
-    title.setAttribute("style", "max-width:" + (MODAL_WIDTH - (fullIndent + IMAGE_INDENT)) + "px");
-    var titleText = this.document.createTextNode(data.displayText);
-    title.appendChild(titleText);
-    div.appendChild(title);
-
-    return div;
+    return button;
   },
-  createTextRow: function(data){
-    var fullIndent = data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT + TEXT_EXTRA_PADDING;
-    var div = this.document.createElement("DIV");
-    div.className = data.selected ? "row selected" : "row";
-    var paddingStyle = "padding-left:" + fullIndent + "px";
-    div.setAttribute("style", paddingStyle);
-    div.setAttribute('row-id', data.id);
-
+  createIconDiv: function(data){
+    var iconClass = this.iconClass(data);
     var innerDiv = this.document.createElement("DIV");
-    innerDiv.className = "document-icon";
-    div.appendChild(innerDiv);
-
+    innerDiv.className = iconClass;
+    return innerDiv;
+  },
+  createTitle: function(data){
+    var titleClass = this.titleClass(data);
     var title = this.document.createElement("H3");
-    title.className = "content-label-document";
-    title.setAttribute("style", "max-width:" + (MODAL_WIDTH - (fullIndent + TEXT_INDENT)) + "px");
+    title.className = titleClass;
+
     var titleText = this.document.createTextNode(data.displayText);
     title.appendChild(titleText);
-    div.appendChild(title);
+    return title;
+  },
+  calculateIndent: function(data){
+    switch(data.type){
+      case "text":
+        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT + TEXT_EXTRA_PADDING;
+      case "element":
+        return data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT;
+    }
+  },
+  iconClass: function(data){
+    switch(data.type){
+      case "text":
+        return 'document-icon';
+      case "element":
+        return 'folder-icon buttonable';
+    }
+  },
+  titleClass: function(data){
+    switch(data.type){
+      case "text":
+        return 'content-label-document';
+      case "element":
+        return 'content-label';
+    }
+  },
+  createRow: function(data){
+    var fullIndent = this.calculateIndent(data);
+
+    var div = this.createDivContainer(data, fullIndent);
+
+    if(data.type === "element"){
+      var buttonDivContainer = this.createInnerContainer('fixed');
+      var button = this.createButton(data);
+
+      buttonDivContainer.appendChild(button);
+      div.appendChild(buttonDivContainer);
+    }
+
+    var iconDivContainer = this.createInnerContainer('fixed');
+    var iconDiv = this.createIconDiv(data);
+
+    iconDivContainer.appendChild(iconDiv);
+    div.appendChild(iconDivContainer);
+
+    var titleDivContainer = this.createInnerContainer('overflow');
+    var title = this.createTitle(data);
+
+    titleDivContainer.appendChild(title);
+    div.appendChild(titleDivContainer);
 
     return div;
   },
   prepareRenderableElements: function(){
-
     var docFrag = this.document.createDocumentFragment();
     var divsToAppend = [];
     this.store.data.forEach(function(el){
@@ -103,20 +146,9 @@ Builder.prototype = {
 
     while(divsToAppend.length){
       var node = divsToAppend.shift();
-      var div = null;
 
-      switch(node.type){
-        case "element":
-          div = this.createFolderRow(node);
-          break;
-        case "text":
-          div = this.createTextRow(node);
-          break;
-      }
-
-      if(div){
-        docFrag.appendChild(div);
-      }
+      var div = this.createRow(node);
+      docFrag.appendChild(div);
 
       if(node.showChildren && node.children && node.children.length){
         node.children.forEach(function(el){
