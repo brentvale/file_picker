@@ -1,6 +1,8 @@
 'use strict'
 
-var INDENT_PER_LEVEL = 15;
+var INDENT_PER_LEVEL = 25;
+var INITIAL_PADDING_LEFT = 15;
+var TEXT_EXTRA_PADDING = 15;
 
 function Builder(params){
   this.document = params.document;
@@ -12,15 +14,27 @@ Builder.prototype = {
     var that = this;
     this.document.addEventListener('click', function (event) {
       var targetId = event.target.getAttribute('data-id');
+      var className = event.target.className;
+
       if(targetId){
         that.store.toggleExpandOrContract(targetId, that.render.bind(that));
+      }
+      if(className.match(/row/g)){
+
+        var targetRowId = event.target.getAttribute('row-id');
+        console.log("MATCHES", targetRowId, className)
+        that.store.toggleSelectedRow(targetRowId, that.render.bind(that));
       }
     }, false);
     this.render();
   },
   createFolderRow: function(data) {
     var div = this.document.createElement("DIV");
-    div.className = "folder-row";
+    div.className = data.selected ? "row selected" : "row";
+    var paddingStyle = "padding-left:" +
+      (data.level * INDENT_PER_LEVEL + INITIAL_PADDING_LEFT) + "px";
+    div.setAttribute("style", paddingStyle);
+    div.setAttribute('row-id', data.id);
 
     var button = this.document.createElement("BUTTON");
 
@@ -37,7 +51,27 @@ Builder.prototype = {
     div.appendChild(innerDiv);
 
     var title = this.document.createElement("H3");
-    title.className = "folder-label";
+    title.className = "content-label";
+    var titleText = this.document.createTextNode(data.displayText);
+    title.appendChild(titleText);
+    div.appendChild(title);
+
+    return div;
+  },
+  createTextRow: function(data){
+    var div = this.document.createElement("DIV");
+    div.className = data.selected ? "row selected" : "row";
+    var paddingStyle = "padding-left:" +
+      (data.level * INDENT_PER_LEVEL + TEXT_EXTRA_PADDING + INITIAL_PADDING_LEFT) + "px";
+    div.setAttribute("style", paddingStyle);
+    div.setAttribute('row-id', data.id);
+
+    var innerDiv = this.document.createElement("DIV");
+    innerDiv.className = "document-icon";
+    div.appendChild(innerDiv);
+
+    var title = this.document.createElement("H3");
+    title.className = "content-label";
     var titleText = this.document.createTextNode(data.displayText);
     title.appendChild(titleText);
     div.appendChild(title);
@@ -59,6 +93,10 @@ Builder.prototype = {
       switch(node.type){
         case "element":
           div = this.createFolderRow(node);
+          break;
+        case "text":
+          div = this.createTextRow(node);
+          break;
       }
 
       if(div){
@@ -67,7 +105,7 @@ Builder.prototype = {
 
       if(node.showChildren && node.children && node.children.length){
         node.children.forEach(function(el){
-          divsToAppend.push(el);
+          divsToAppend.unshift(el);
         });
       }
     }

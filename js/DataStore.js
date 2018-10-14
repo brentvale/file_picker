@@ -9,7 +9,7 @@ DataStore.prototype = {
     return this.data;
   },
 
-  findAndUpdate: function(obj, id) {
+  findAndUpdateExpanded: function(obj, id) {
     if(obj instanceof Array){
       for(var i = 0; i < obj.length; i ++){
         if(obj[i].id == id){
@@ -17,16 +17,32 @@ DataStore.prototype = {
           return;
         }
         if(obj[i].showChildren && obj[i].children && obj[i].children.length){
-          this.findAndUpdate(obj[i].children, id);
+          this.findAndUpdateExpanded(obj[i].children, id);
         }
       }
     }
-    return;
+  },
+  findAndUpdateSelectedRow: function(obj, id) {
+    if(obj instanceof Array){
+      for(var i = 0; i < obj.length; i ++){
+        if(obj[i].id == id){
+          obj[i].selected = true;
+        }
+        if(obj[i].selected && obj[i].id != id){
+          obj[i].selected = false;
+        }
+        if(obj[i].showChildren && obj[i].children && obj[i].children.length){
+          this.findAndUpdateSelectedRow(obj[i].children, id);
+        }
+      }
+    }
   },
   toggleExpandOrContract: function(id, callback){
-
-    this.findAndUpdate(this.data, id);
-
+    this.findAndUpdateExpanded(this.data, id);
+    callback();
+  },
+  toggleSelectedRow: function(id, callback){
+    this.findAndUpdateSelectedRow(this.data, id);
     callback();
   }
 };
@@ -37,6 +53,7 @@ const data = [
     displayText: 'body',
     type: 'element',
     showChildren: false,
+    selected: false,
     level: 0,
     children: [
       {
@@ -44,6 +61,7 @@ const data = [
         displayText: 'h1',
         type: 'element',
         showChildren: false,
+        selected: false,
         level: 1,
         children: [
           {
@@ -51,6 +69,7 @@ const data = [
             type: 'text',
             displayText: 'An Example Site',
             level: 2,
+            selected: false,
           }
         ]
       },
@@ -59,6 +78,7 @@ const data = [
         displayText: 'h3',
         type: 'element',
         showChildren: false,
+        selected: false,
         level: 1,
         children: [
           {
@@ -66,6 +86,7 @@ const data = [
             type: 'text',
             displayText: 'To Demonstrate what some nested nodes might look like',
             level: 2,
+            selected: false,
           }
         ]
       },
@@ -74,6 +95,7 @@ const data = [
         displayText: 'ul',
         type: 'element',
         showChildren: false,
+        selected: false,
         level: 1,
         children: [
           {
@@ -81,6 +103,7 @@ const data = [
             displayText: 'li',
             type: 'element',
             showChildren: false,
+            selected: false,
             level: 2,
             children: [
               {
@@ -88,6 +111,7 @@ const data = [
                 type: 'text',
                 displayText: 'One',
                 level: 3,
+                selected: false,
               }
             ]
           },
@@ -96,6 +120,7 @@ const data = [
             displayText: 'li',
             type: 'element',
             showChildren: false,
+            selected: false,
             level: 2,
             children: [
               {
@@ -103,6 +128,7 @@ const data = [
                 type: 'text',
                 displayText: 'Two',
                 level: 3,
+                selected: false,
               }
             ]
           },
@@ -111,6 +137,7 @@ const data = [
             displayText: 'li',
             type: 'element',
             showChildren: false,
+            selected: false,
             level: 2,
             children: [
               {
@@ -118,6 +145,7 @@ const data = [
                 type: 'text',
                 displayText: 'Three',
                 level: 3,
+                selected: false,
               }
             ]
           }
@@ -128,6 +156,7 @@ const data = [
         displayText: 'p',
         type: 'element',
         showChildren: false,
+        selected: false,
         level: 1,
         children: [
           {
@@ -135,6 +164,7 @@ const data = [
             type: 'text',
             displayText: 'Some Text',
             level: 2,
+            selected: false,
           },
           // {
           //                   id: 15,
@@ -145,6 +175,7 @@ const data = [
             type: 'text',
             displayText: 'More Text',
             level: 2,
+            selected: false,
           }
         ]
       },

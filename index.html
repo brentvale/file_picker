@@ -108,10 +108,15 @@
         .mask-buttonable:hover{
             background-color: var(--tundora);
         }
+        .selected > .mask-buttonable {
+            background-color: white;
+        }
+        .selected > .mask-buttonable:hover {
+            background-color: var(--mercury);
+        }
         .buttonable{
             height: 14px;
             width: 14px;
-            cursor: pointer;
         }
         .flex-align {
             display: flex;
@@ -119,12 +124,12 @@
             align-items: center;
             justify-content: space-between;
         }
-        .folder-row {
-            height: 3em;
-            display: flex;
-            flex: 1;
-            padding-left: 1.5em;
-            align-items: center;
+        .document-icon {
+            height: 14px;
+            width: 14px;
+            background-image:url("./icon-sprite.png");
+            background-position: 84px 0px;
+            margin-left: 0.5em;
         }
         .folder-icon {
             background-image:url("./icon-sprite.png");
@@ -139,9 +144,24 @@
             -webkit-mask-image: url("./icon-sprite.png");
             -webkit-mask-position: 56px 0;
         }
-        .folder-label {
+        .selected > .folder-contracted {
+
+        }
+        .content-label {
             padding-left: 1em;
-            color: var(--dove);
+            color: var(--dove) inherit;
+        }
+        .row {
+            height: 3em;
+            display: flex;
+            flex: 1;
+            padding-left: 1.5em;
+            align-items: center;
+            cursor: grab;
+        }
+        .selected{
+            background-color: var(--cornflower-blue);
+            color: white;
         }
         .section {
             padding-left: 1.5em;
@@ -203,17 +223,7 @@
                 <h3>Label</h3>
             </div>
             <div id="modalBody">
-                <!--<div class="folder-row" id="1">-->
-                    <!--<button class="folder-contracted mask-buttonable"></button>-->
-                    <!--<div class="folder-icon buttonable"></div>-->
-                    <!--<h3 class="folder-label">Folder One</h3>-->
-                <!--</div>-->
 
-                <!--<div class="folder-row" id="2">-->
-                    <!--<button class="folder-expanded mask-buttonable"></button>-->
-                    <!--<div class="folder-icon buttonable"></div>-->
-                    <!--<h3 class="folder-label">Folder Two</h3>-->
-                <!--</div>-->
             </div>
             <div id="footer" class="flex-align section">
                 <a>Link</a>
