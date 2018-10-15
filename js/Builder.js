@@ -154,6 +154,8 @@ Builder.prototype = {
       divsToAppend.push(el);
     });
 
+    // divsToAppend.push(this.store.data[0])
+
     while(divsToAppend.length){
       var node = divsToAppend.shift();
 
@@ -161,9 +163,11 @@ Builder.prototype = {
       docFrag.appendChild(div);
 
       if(node.showChildren && node.children && node.children.length){
+        var children = [];
         node.children.forEach(function(el){
-          divsToAppend.unshift(el);
+          children.push(el);
         });
+        divsToAppend = [].concat(children, divsToAppend);
       }
     }
 
