@@ -10,7 +10,7 @@ function Builder(params){
 }
 
 Builder.prototype = {
-  build: function(){
+  addEventListener: function(){
     var that = this;
     this.document.addEventListener('click', function (event) {
       var targetId = event.target.getAttribute('data-id');
@@ -37,6 +37,10 @@ Builder.prototype = {
         }
       }
     }, false);
+  },
+  build: function(){
+    this.addEventListener();
+    this.store.buildDataStructure({ document: this.document, callback: this.render.bind(this)});
     this.render();
   },
   calculateIndent: function(data){
@@ -154,8 +158,6 @@ Builder.prototype = {
       divsToAppend.push(el);
     });
 
-    // divsToAppend.push(this.store.data[0])
-
     while(divsToAppend.length){
       var node = divsToAppend.shift();
 
@@ -192,6 +194,8 @@ Builder.prototype = {
 
     var docFrag = this.prepareRenderableElements();
 
+    var modalBody = this.document.getElementById('modalBody');
     modalBody.appendChild(docFrag);
   }
 };
+
