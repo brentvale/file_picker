@@ -240,7 +240,6 @@ Builder.prototype = {
         } else if(data.category === 'head') {
           return 'private-folder-icon buttonable';
         }
-
     }
   },
   prepareRenderableElements: function(){

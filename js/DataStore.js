@@ -154,7 +154,6 @@ DataStore.prototype = {
   findAndUpdateSelectedRow: function(obj, id) {
     if(obj instanceof Array){
       for(var i = 0; i < obj.length; i ++){
-        console.log("OBJ", obj[i]);
         if(obj[i].id == id){
           obj[i].selected = !obj[i].selected;
         }
