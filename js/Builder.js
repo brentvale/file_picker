@@ -39,9 +39,101 @@ Builder.prototype = {
     }, false);
   },
   build: function(){
-    this.addEventListener();
-    this.store.buildDataStructure({ document: this.document, callback: this.render.bind(this)});
-    this.render();
+    var that = this;
+    this.buildInitialLayout(function(){
+      that.addEventListener();
+      that.store.buildDataStructure({ document: that.document, callback: that.render.bind(that)});
+    });
+  },
+  buildInitialLayout: function(callback){
+  // <div id="main">
+  //     <div id="modal">
+  //        <div id="title" class="flex-align section">
+  //           <h1>Title</h1>
+  //           <span class="x-close mask-buttonable"></span>
+  //        </div>
+  //       <div id="label" class="flex-align section">
+  //          <h3>Label</h3>
+  //       </div>
+  //       <div id="modalBody">
+  //
+  //       </div>
+  //       <div id="footer" class="flex-align section">
+  //          <a>Link</a>
+  //          <button class="submit">Done</button>
+  //       </div>
+  //   </div>
+  // </div>
+
+    // MAIN container
+    var mainDiv = this.document.createElement("DIV");
+    mainDiv.setAttribute("id", "main");
+
+      // MODAL
+      var modalDiv = this.document.createElement("DIV");
+      modalDiv.setAttribute("id", "modal");
+
+        // TITLE SECTION
+        var titleDiv = this.document.createElement("DIV");
+        titleDiv.setAttribute("id", "title");
+        titleDiv.className = "flex-align section";
+
+          // H1
+          var titleEl = this.document.createElement("H1");
+          titleEl.innerHTML = "Title";
+          modalDiv.appendChild(titleEl);
+
+          // SPAN
+          var titleSpan = this.document.createElement("span");
+          titleSpan.className = "x-close mask-buttonable";
+          modalDiv.appendChild(titleSpan);
+
+        titleDiv.appendChild(titleEl);
+        titleDiv.appendChild(titleSpan);
+
+      modalDiv.appendChild(titleDiv);
+
+        // LABEL SECTION
+        var labelDiv = this.document.createElement("DIV");
+        labelDiv.setAttribute("id", "label");
+        labelDiv.className = "flex-align section";
+
+          // H3
+          var labelTitleEl = this.document.createElement("H3");
+          labelTitleEl.innerHTML = "Label";
+
+        labelDiv.appendChild(labelTitleEl);
+
+      modalDiv.appendChild(labelDiv);
+
+        // MODAL BODY
+        var modalBody = this.document.createElement("DIV");
+        modalBody.setAttribute("id", "modalBody");
+
+      modalDiv.appendChild(modalBody);
+
+        // FOOTER
+        var footerDiv = this.document.createElement("DIV");
+        footerDiv.setAttribute("id", "footer");
+        footerDiv.className = "flex-align section";
+
+          // anchor
+          var linkEl = this.document.createElement("A");
+          linkEl.innerHTML = "Link";
+
+          // BUTTON
+          var button = this.document.createElement("BUTTON");
+          button.innerHTML = "Done";
+          button.className = "submit";
+
+        footerDiv.appendChild(linkEl);
+        footerDiv.appendChild(button);
+
+      modalDiv.appendChild(footerDiv);
+    mainDiv.appendChild(modalDiv);
+
+    this.document.body.appendChild(mainDiv);
+    callback();
   },
   calculateIndent: function(data){
     switch(data.type){

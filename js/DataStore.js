@@ -162,7 +162,6 @@ DataStore.prototype = {
           obj[i].selected = false;
         }
         if(obj[i].children && obj[i].children.length){
-          console.log("CHILDREN? ", obj[i]);
           this.findAndUpdateSelectedRow(obj[i].children, id);
         }
       }
